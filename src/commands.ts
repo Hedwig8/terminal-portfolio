@@ -89,6 +89,12 @@ const commands: CommandMap = {
             return 'Hedwig8';
         }
     },
+    home: {
+        help: 'The (is)land where the boy was born and raised',
+        run: (args) => {
+            return '/Europe/Portugal/Azores/Flores\\ Island';
+        }
+    },
 }
 
 export default commands;
