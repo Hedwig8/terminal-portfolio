@@ -92,9 +92,19 @@ const commands: CommandMap = {
     home: {
         help: 'The (is)land where the boy was born and raised',
         run: (args) => {
+            const usage = `Run simply ${U.command('home')} to get home location`;
+            if (args.length > 0) return `${U.error} Too many parameters passed\r\n${usage}`;
             return '/Europe/Portugal/Azores/Flores\\ Island';
         }
     },
+    hobbies: {
+        help: 'A brief glimpse on some casual hobbies the engineer likes to do',
+        run: (args) => {
+            const usage = `Run ${U.command('hobbies')} to get some of the hobbies`;
+            if (args.length > 0) return `${U.error} Too many parameters passed\r\n${usage}`;
+            return '- Online games with friends: CS:GO, Apex Legends, Valorant;\r\n- YouTube videos about general technology and engineering, games, sometimes to explore new tech and topics on software and programming world;\r\n- play Volleybal, Football or Padel with friends;\r\n- reading books: mainly Ken Follett, sometimes about acquiring/developing hard/soft skills';
+        }
+    }
 }
 
 export default commands;
