@@ -104,7 +104,33 @@ const commands: CommandMap = {
             if (args.length > 0) return `${U.error} Too many parameters passed\r\n${usage}`;
             return '- Online games with friends: CS:GO, Apex Legends, Valorant;\r\n- YouTube videos about general technology and engineering, games, sometimes to explore new tech and topics on software and programming world;\r\n- play Volleybal, Football or Padel with friends;\r\n- reading books: mainly Ken Follett, sometimes about acquiring/developing hard/soft skills';
         }
-    }
+    },
+    curiosities: {
+        help: 'Some personal curiosities shared by the author',
+        run: (args) => {
+            const facts = [
+                'My first programming experience was in a high school project, CanSat, using Arduino to program a small can-sized satellite',
+                'I played federated Volleyball for over 10 years in my local club, and got the chance to compete twice for the final national championship',
+                'I hate Java for being too verbose and over-engineered in some aspects',
+                'My favorite language is Python for its close relationship with Big Data, Artificial Intelligence and Machine Learning, plus can be used in backend',
+                'In my free time, I like to have great ideas, that I later discover to be too time and/or money costly. Sometimes I reduce the size of the project so I can build it',
+                'This portfolio started as a 3D-game-styled interface and a terminal to interact with the main player',
+            ];
+            const usage = `${U.command('curiosities')} returns a random fact about the author; ${U.command('curiosities --list')} for all of them`;
+            if (args.length > 1) return `${U.error} Too many parameters passed\r\n${usage}`;
+            if (args.length === 1 && args[0] !== '--list') return `${U.error} Wrong parameter passed\r\n${usage}`;
+            if (args.length === 1) return '- ' + facts.join('\r\n- ');
+            return facts[Math.floor(Math.random()*facts.length)];
+        }
+    },
+    languages: {
+        help: 'The languages the person can speak',
+        run: (args) => {
+            const usage = `Run ${U.command('languages')} to get languages the person speaks `;
+            if (args.length > 0) return `${U.error} Too many parameters passed${usage}`;
+            return 'Native Portuguese; Fluent English';
+        }
+    },
 }
 
 export default commands;
