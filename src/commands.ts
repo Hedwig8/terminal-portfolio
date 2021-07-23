@@ -14,7 +14,7 @@ interface CommandMap {
 const commands: CommandMap = {
     a: {
         help: 'test command',
-        run: (args) => {
+        run: () => {
             return 'hello there'
         }
     },
@@ -133,13 +133,13 @@ const commands: CommandMap = {
     },
     skills: {// TBD
         help: '',
-        run: (args) => {
+        run: () => {
             return 'TBD';
         }
     },
     interests: { // TBD
         help: '',
-        run: (args) => {
+        run: () => {
             return 'TBD';
         }
     },

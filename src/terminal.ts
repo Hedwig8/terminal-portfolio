@@ -27,7 +27,7 @@ export class TerminalInterface {
         this.separator = options?.separator || this.separator;
         this.welcome = options?.welcome || this.welcome;
 
-        this.term.open(document.getElementById('terminal'));
+        this.term.open(document.getElementById('terminal')!);
 
         this.term.write(this.welcome);
         this.writePrompt();
