@@ -19,7 +19,7 @@ const commands: CommandMap = {
         }
     },
     name: {
-        help: 'Name of the exceptional Software Engineer that develop this respectable portfolio as a terminal interface; -f for full name',
+        help: 'Name of the exceptional Software Engineer that develop this respectable portfolio as a terminal interface;\r\n\t-f for full name',
         run: (args) => {
             const usage = `Run ${U.command('name')} to receive the name of the exceptional Software Engineer that developed this respectable portfolio as a terminal interface\r\n\t-f: returns full name`;
             if (args.length > 1) return `${U.error} Too many parameters passed\r\n${usage}`;
@@ -106,7 +106,7 @@ const commands: CommandMap = {
         }
     },
     curiosities: {
-        help: 'Some personal curiosities shared by the author',
+        help: 'Some personal curiosities shared by the author\r\n\t--list for complete list of curiosities',
         run: (args) => {
             const facts = [
                 'My first programming experience was in a high school project, CanSat, using Arduino to program a small can-sized satellite',
@@ -129,6 +129,18 @@ const commands: CommandMap = {
             const usage = `Run ${U.command('languages')} to get languages the person speaks `;
             if (args.length > 0) return `${U.error} Too many parameters passed${usage}`;
             return 'Native Portuguese; Fluent English';
+        }
+    },
+    skills: {// TBD
+        help: '',
+        run: (args) => {
+            return 'TBD';
+        }
+    },
+    interests: { // TBD
+        help: '',
+        run: (args) => {
+            return 'TBD';
         }
     },
 }
