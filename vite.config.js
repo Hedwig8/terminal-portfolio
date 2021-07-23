@@ -4,5 +4,6 @@ module.exports = {
             external: [
             ]
         }
-    }
+    },
+    base: '/terminal-interface-portfolio/'
 }
