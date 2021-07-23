@@ -37,7 +37,7 @@ export class TerminalInterface {
                 this.entries.push(this.curr_line);
                 this.nl();
                 this.writePrompt();
-            } else if (key.domEvent.key === 'Backspace') {
+            } else if (key.domEvent.key === 'Backspace' && this.cursor > 0) {
                 this.curr_line = this.curr_line.substr(0, this.cursor-1) + this.curr_line.substr(this.cursor);
                 this.cursor--;
                 this.term.write("\b" + this.curr_line.substr(this.cursor) + ' \b' +this.horizArrows);
