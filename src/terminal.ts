@@ -14,6 +14,7 @@ export class TerminalInterface {
     cursor: number = 0;
     horizArrows = '';
     entries: string[] = [];
+    entriesPointer: number = 0;
     prompt: string = 'TerminalInterface';
     separator: string = '$';
     welcome: string = 'Welcome to TerminalInterface';
@@ -35,6 +36,7 @@ export class TerminalInterface {
         this.term.onKey((key) => {
             if (key.domEvent.key === "Enter") {
                 this.entries.push(this.curr_line);
+                this.entriesPointer = this.entries.length;
                 this.nl();
                 this.writePrompt();
             } else if (key.domEvent.key === 'Backspace' && this.cursor > 0) {
@@ -52,11 +54,20 @@ export class TerminalInterface {
                 this.cursor--;
                 this.term.write(key.key);
                 this.horizArrows += key.key;
-            } else if (key.domEvent.key === 'ArrowUp') {
-
-            } else if (key.domEvent.key === 'ArrowDown') {
-
+            } else if (key.domEvent.key === 'ArrowUp' && this.entriesPointer > 0) {
+                this.entriesPointer--;
+                this.eraseLine();
+                this.curr_line = this.entries[this.entriesPointer];
+                this.cursor = this.curr_line.length;
+                this.term.write(this.curr_line);
+            } else if (key.domEvent.key === 'ArrowDown' && this.entriesPointer < this.entries.length) {
+                this.entriesPointer++;
+                this.eraseLine();
+                this.curr_line = this.entries[this.entriesPointer] || '';
+                this.cursor = this.curr_line.length;
+                this.term.write(this.curr_line);
             } else if (key.domEvent.key.length === 1) {
+                this.entriesPointer = this.entries.length;
                 this.curr_line = this.curr_line.substr(0, this.cursor) + key.key + this.curr_line.substr(this.cursor);
                 this.cursor++;
                 this.term.write(key.key + this.curr_line.substr(this.cursor) + this.horizArrows);
@@ -104,6 +115,14 @@ export class TerminalInterface {
         this.nl();
         this.term.write(this.prompt + this.separator + ' ');
         this.curr_line = "";
+        this.cursor = 0;
+        this.horizArrows = '';
+    }
+
+    private eraseLine(): void {
+        for (let _ of this.curr_line)
+            this.term.write('\b \b');
+        this.curr_line = '';
         this.cursor = 0;
         this.horizArrows = '';
     }
