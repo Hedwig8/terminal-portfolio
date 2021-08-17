@@ -3,7 +3,8 @@ import commands from './commands';
 import {Utils as U} from './utils';
 
 interface TerminalArgs {
-    prompt?: string;
+    user?: string;
+    machine?: string;
     separator?: string;
     welcome?: string;
 }
@@ -15,29 +16,41 @@ export class TerminalInterface {
     horizArrows = '';
     entries: string[] = [];
     entriesPointer: number = 0;
-    prompt: string = 'TerminalInterface';
+    user: string = 'anon';
+    machine: string = 'machine';
     separator: string = '$';
     welcome: string = 'Welcome to TerminalInterface';
+    loggedUser: boolean = false;
 
     constructor(options?: TerminalArgs) {
         this.term = new Terminal({
             cursorBlink: true,
-            cursorStyle: 'block'
+            cursorStyle: 'block',
+            theme: {
+                background: '#222',
+            },
         });
-        this.prompt = options?.prompt || this.prompt;
-        this.separator = options?.separator || this.separator;
-        this.welcome = options?.welcome || this.welcome;
+        this.setUser(options?.user);
+        this.setMachine(options?.machine);
+        this.setSeparator(options?.separator);
+        this.setWelcome(options?.welcome);
 
         this.term.open(document.getElementById('terminal')!);
 
         this.term.write(this.welcome);
-        this.writePrompt();
-
+        this.nl();
+        this.term.write('Please enter your name: ');
         this.term.onKey((key) => {
             if (key.domEvent.key === "Enter") {
-                this.entries.push(this.curr_line);
-                this.entriesPointer = this.entries.length;
-                this.nl();
+                if (!this.loggedUser) {
+                    console.log('initial enter')
+                    this.setUser(this.curr_line);
+                    this.curr_line = '';
+                    this.cursor = 0;
+                    this.loggedUser = true;
+                } else {
+                    this.nl();
+                }
                 this.writePrompt();
             } else if (key.domEvent.key === 'Backspace' && this.cursor > 0) {
                 this.curr_line = this.curr_line.substr(0, this.cursor-1) + this.curr_line.substr(this.cursor);
@@ -73,7 +86,15 @@ export class TerminalInterface {
                 this.term.write(key.key + this.curr_line.substr(this.cursor) + this.horizArrows);
             }
         })
+        
         this.term.focus();
+    }
+
+    private addEntry() {
+        this.entries.push(this.curr_line);
+        this.entriesPointer = this.entries.length;
+        this.curr_line = "";
+        this.cursor = 0;
     }
 
     private nl() {
@@ -93,11 +114,17 @@ export class TerminalInterface {
     }
 
     private runCommand(): string {
-        const [command, args] = this.splitCurrLine();
+        let [command, args] = this.splitCurrLine();
+
+        this.addEntry();
 
         if (command == 'clear') {
             this.term.clear();
             return '';
+        } else if (command == '!!') {
+            this.entries[this.entriesPointer-1] = this.entries[this.entriesPointer-2];
+            console.log(this.entries, this.entriesPointer);
+            command = this.entries[this.entriesPointer-1];
         }
 
         if (commands.hasOwnProperty(command)) {
@@ -113,9 +140,7 @@ export class TerminalInterface {
             this.term.write(this.runCommand());
         }
         this.nl();
-        this.term.write(this.prompt + this.separator + ' ');
-        this.curr_line = "";
-        this.cursor = 0;
+        this.term.write(this.user + '@' + this.machine + ' ' + this.separator + ' ');
         this.horizArrows = '';
     }
 
@@ -125,5 +150,21 @@ export class TerminalInterface {
         this.curr_line = '';
         this.cursor = 0;
         this.horizArrows = '';
+    }
+
+    private setSeparator(sep: string = '$') {
+        this.separator = `\x1b[1;31m${sep}\x1b[0m`;
+    }
+
+    private setWelcome(welcome: string = 'Welcome to TerminalInterface') {
+        this.welcome = `\x1b[1m${welcome}\x1b[0m`;
+    }
+
+    private setUser(user: string = 'anon') {
+        this.user = `\x1B[1;32m${user}\x1B[0m`;
+    }
+
+    private setMachine(machine: string = 'machine') {
+        this.machine = `\x1B[1;94m${machine}\x1B[0m`;
     }
 }
