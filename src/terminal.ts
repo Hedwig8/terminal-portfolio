@@ -2,13 +2,6 @@ import { Terminal } from "xterm";
 import commands from './commands';
 import {Utils as U} from './utils';
 
-interface TerminalArgs {
-    user?: string;
-    machine?: string;
-    separator?: string;
-    welcome?: string;
-}
-
 export class TerminalInterface {
     term: Terminal;
     curr_line: string = '';
@@ -16,13 +9,13 @@ export class TerminalInterface {
     horizArrows = '';
     entries: string[] = [];
     entriesPointer: number = 0;
-    user: string = 'anon';
-    machine: string = 'machine';
-    separator: string = '$';
-    welcome: string = 'Welcome to TerminalInterface';
+    user: string = '';
+    machine: string = '';
+    separator: string = '';
+    welcome: string = '';
     loggedUser: boolean = false;
 
-    constructor(options?: TerminalArgs) {
+    constructor() {
         this.term = new Terminal({
             cursorBlink: true,
             cursorStyle: 'block',
@@ -30,21 +23,30 @@ export class TerminalInterface {
                 background: '#222',
             },
         });
-        this.setUser(options?.user);
-        this.setMachine(options?.machine);
-        this.setSeparator(options?.separator);
-        this.setWelcome(options?.welcome);
+        this.setUser(localStorage.getItem('username'));
+        this.setMachine('myPortfolio');
+        this.setSeparator('>');
+        this.setWelcome('Welcome to my portfolio!');
 
         this.term.open(document.getElementById('terminal')!);
 
         this.term.write(this.welcome);
         this.nl();
-        this.term.write('Please enter your name: ');
+        if (localStorage.getItem('username') != null) {
+            this.loggedUser = true;
+            this.writePrompt();
+        } else {
+            this.term.write('Write your name: ');
+        }
         this.term.onKey((key) => {
             if (key.domEvent.key === "Enter") {
                 if (!this.loggedUser) {
-                    console.log('initial enter')
+                    if (this.curr_line == '') {
+                        this.term.write(U.errorMessage('Please provide a valid name!\n\r'));
+                        return;
+                    }
                     this.setUser(this.curr_line);
+                    this.term.write('\n\rGreetings '+ U.successMessage(this.curr_line));
                     this.curr_line = '';
                     this.cursor = 0;
                     this.loggedUser = true;
@@ -86,7 +88,7 @@ export class TerminalInterface {
                 this.term.write(key.key + this.curr_line.substr(this.cursor) + this.horizArrows);
             }
         })
-        
+
         this.term.focus();
     }
 
@@ -160,8 +162,10 @@ export class TerminalInterface {
         this.welcome = `\x1b[1m${welcome}\x1b[0m`;
     }
 
-    private setUser(user: string = 'anon') {
+    private setUser(user: string|null) {
+        if (user === null) return;
         this.user = `\x1B[1;32m${user}\x1B[0m`;
+        localStorage.setItem('username', user);
     }
 
     private setMachine(machine: string = 'machine') {
