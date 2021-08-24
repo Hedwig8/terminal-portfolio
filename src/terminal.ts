@@ -7,7 +7,7 @@ export class TerminalInterface {
     curr_line: string = '';
     cursor: number = 0;
     horizArrows = '';
-    entries: string[] = [];
+    entries: string[] = localStorage.getItem('entries')?.split(',') || [];
     entriesPointer: number = 0;
     user: string = '';
     machine: string = '';
@@ -95,6 +95,7 @@ export class TerminalInterface {
     private addEntry() {
         this.entries.push(this.curr_line);
         this.entriesPointer = this.entries.length;
+        localStorage.setItem('entries', this.entries.join(','));
         this.curr_line = "";
         this.cursor = 0;
     }
