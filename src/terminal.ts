@@ -8,7 +8,7 @@ export class TerminalInterface {
     cursor: number = 0;
     horizArrows = '';
     entries: string[] = localStorage.getItem('entries')?.split(',') || [];
-    entriesPointer: number = 0;
+    entriesPointer: number = this.entries.length;
     user: string = '';
     machine: string = '';
     separator: string = '';
