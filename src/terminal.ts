@@ -3,7 +3,7 @@ import { FitAddon } from "xterm-addon-fit";
 import commands from './commands';
 import {Utils as U} from './utils';
 
-export class TerminalInterface {
+export class TerminalController {
     term: Terminal;
     curr_line: string = '';
     cursor: number = 0;
@@ -35,6 +35,7 @@ export class TerminalInterface {
         this.term.open(document.getElementById('terminal')!);
         fit.fit();
         window.addEventListener('resize', () => fit.fit());
+        
         this.term.write(this.welcome);
         this.nl();
         if (localStorage.getItem('username') != null) {

@@ -1,4 +1,4 @@
 import './style.css'
-import {TerminalInterface} from './terminal';
+import {TerminalController} from './terminal';
 
-new TerminalInterface();
+new TerminalController();
