@@ -1,4 +1,5 @@
 import { Terminal } from "xterm";
+import { FitAddon } from "xterm-addon-fit";
 import commands from './commands';
 import {Utils as U} from './utils';
 
@@ -23,13 +24,17 @@ export class TerminalInterface {
                 background: '#222',
             },
         });
+        const fit = new FitAddon();
+        this.term.loadAddon(fit);
+
         this.setUser(localStorage.getItem('username'));
         this.setMachine('myPortfolio');
         this.setSeparator('>');
         this.setWelcome('Welcome to my portfolio!');
 
         this.term.open(document.getElementById('terminal')!);
-
+        fit.fit();
+        window.addEventListener('resize', () => fit.fit());
         this.term.write(this.welcome);
         this.nl();
         if (localStorage.getItem('username') != null) {
