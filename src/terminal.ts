@@ -1,7 +1,8 @@
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
-import commands from './commands';
-import {Utils as U} from './utils';
+import { commands } from './commands';
+import { keyActions } from "./keys/KeyActionController";
+import { Utils as U } from './utils';
 
 export class TerminalController {
     term: Terminal;
@@ -35,7 +36,7 @@ export class TerminalController {
         this.term.open(document.getElementById('terminal')!);
         fit.fit();
         window.addEventListener('resize', () => fit.fit());
-        
+
         this.term.write(this.welcome);
         this.nl();
         if (localStorage.getItem('username') != null) {
@@ -45,36 +46,12 @@ export class TerminalController {
             this.term.write('Write your name: ');
         }
         this.term.onKey((key) => {
-            if (key.domEvent.key === "Enter") {
-                if (!this.loggedUser) {
-                    if (this.curr_line == '') {
-                        this.term.write(U.errorMessage('Please provide a valid name!\n\r'));
-                        return;
-                    }
-                    this.setUser(this.curr_line);
-                    this.term.write('\n\rGreetings '+ U.successMessage(this.curr_line));
-                    this.curr_line = '';
-                    this.cursor = 0;
-                    this.loggedUser = true;
-                } else {
-                    this.nl();
-                }
-                this.writePrompt();
-            } else if (key.domEvent.key === 'Backspace' && this.cursor > 0) {
-                this.curr_line = this.curr_line.substr(0, this.cursor-1) + this.curr_line.substr(this.cursor);
-                this.cursor--;
-                this.term.write("\b" + this.curr_line.substr(this.cursor) + ' \b' +this.horizArrows);
+            const action = keyActions[key.domEvent.key];
+            if (action != null) {
+                (new action(this)).processKey(key);
             } else if (key.domEvent.key === 'Delete') {
                 //this.curr_line = this.curr_line.substr(0, this.cursor) + this.curr_line.substr(this.cursor+1);
                 //this.term.write(this.curr_line.substr(this.cursor)+' '+this.horizArrows); // -> problem with buffer getting smaller but horizArrows being the same
-            } else if (key.domEvent.key === 'ArrowRight' && this.cursor < this.curr_line.length) {
-                this.cursor++;
-                this.term.write(key.key);
-                this.horizArrows += key.key;
-            } else if (key.domEvent.key === 'ArrowLeft' && this.cursor > 0) {
-                this.cursor--;
-                this.term.write(key.key);
-                this.horizArrows += key.key;
             } else if (key.domEvent.key === 'ArrowUp' && this.entriesPointer > 0) {
                 this.entriesPointer--;
                 this.eraseLine();
@@ -106,7 +83,7 @@ export class TerminalController {
         this.cursor = 0;
     }
 
-    private nl() {
+    nl() {
         this.term.write('\r\n');
     }
 
@@ -144,7 +121,7 @@ export class TerminalController {
         return `${U.error} ${U.command(command)} is not available. Run ${U.command('help')} for all available commands`;
     }
 
-    private writePrompt(): void {
+    writePrompt(): void {
         if (this.curr_line !== '') {
             this.term.write(this.runCommand());
         }
@@ -169,7 +146,7 @@ export class TerminalController {
         this.welcome = `\x1b[1m${welcome}\x1b[0m`;
     }
 
-    private setUser(user: string|null) {
+    setUser(user: string|null) {
         if (user === null) return;
         this.user = `\x1B[1;32m${user}\x1B[0m`;
         localStorage.setItem('username', user);

@@ -11,7 +11,7 @@ interface CommandMap {
     [key: string]: Command
 }
 
-const commands: CommandMap = {
+export const commands: CommandMap = {
     a: {
         help: 'test command',
         run: () => {
@@ -144,5 +144,3 @@ const commands: CommandMap = {
         }
     },
 }
-
-export default commands;
