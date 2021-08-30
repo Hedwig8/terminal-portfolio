@@ -52,18 +52,6 @@ export class TerminalController {
             } else if (key.domEvent.key === 'Delete') {
                 //this.curr_line = this.curr_line.substr(0, this.cursor) + this.curr_line.substr(this.cursor+1);
                 //this.term.write(this.curr_line.substr(this.cursor)+' '+this.horizArrows); // -> problem with buffer getting smaller but horizArrows being the same
-            } else if (key.domEvent.key === 'ArrowUp' && this.entriesPointer > 0) {
-                this.entriesPointer--;
-                this.eraseLine();
-                this.curr_line = this.entries[this.entriesPointer];
-                this.cursor = this.curr_line.length;
-                this.term.write(this.curr_line);
-            } else if (key.domEvent.key === 'ArrowDown' && this.entriesPointer < this.entries.length) {
-                this.entriesPointer++;
-                this.eraseLine();
-                this.curr_line = this.entries[this.entriesPointer] || '';
-                this.cursor = this.curr_line.length;
-                this.term.write(this.curr_line);
             } else if (key.domEvent.key.length === 1) {
                 this.entriesPointer = this.entries.length;
                 this.curr_line = this.curr_line.substr(0, this.cursor) + key.key + this.curr_line.substr(this.cursor);
@@ -130,7 +118,7 @@ export class TerminalController {
         this.horizArrows = '';
     }
 
-    private eraseLine(): void {
+    eraseLine(): void {
         for (let _ of this.curr_line)
             this.term.write('\b \b');
         this.curr_line = '';
