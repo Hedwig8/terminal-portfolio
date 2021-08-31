@@ -1,6 +1,7 @@
 import { TerminalController } from "../terminal";
 import { KeyActionInterface } from "./KeyAction";
 import { Utils as U } from "../utils";
+import { CommandsController } from "../commands/CommandsController";
 
 export class Enter implements KeyActionInterface {
     controller: TerminalController;
@@ -9,7 +10,6 @@ export class Enter implements KeyActionInterface {
     }
 
     processKey():void {
-        console.log('enter')
         if (this.controller.loggedUser) {
             this.controller.nl()
         } else {
@@ -23,6 +23,7 @@ export class Enter implements KeyActionInterface {
             this.controller.cursor = 0;
             this.controller.loggedUser = true;
         }
+        this.controller.term.write((new CommandsController(this.controller)).runCommand(this.controller.curr_line));
         this.controller.writePrompt();
     }
 }

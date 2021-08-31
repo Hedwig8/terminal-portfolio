@@ -8,7 +8,6 @@ export class BackSpace implements KeyActionInterface {
     }
 
     processKey():void {
-        console.log('backspace');
         if (this.controller.cursor <= 0) {
             return;
         }
