@@ -1,8 +1,6 @@
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
-import { commands } from './commands';
 import { keyActions } from "./keys/KeyActionController";
-import { Utils as U } from './utils';
 
 export class TerminalController {
     term: Terminal;
@@ -63,7 +61,7 @@ export class TerminalController {
         this.term.focus();
     }
 
-    private addEntry() {
+    addEntry() {
         this.entries.push(this.curr_line);
         this.entriesPointer = this.entries.length;
         localStorage.setItem('entries', this.entries.join(','));
@@ -75,44 +73,7 @@ export class TerminalController {
         this.term.write('\r\n');
     }
 
-    private splitCurrLine(): [string, string[]] {
-        const index = this.curr_line.indexOf(' ');
-
-        // command with no args
-        if (index === -1) return [this.curr_line, []]
-
-        // split command from args
-        const command = this.curr_line.substr(0, index);
-        const args = this.curr_line.substr(index + 1, this.curr_line.length).split(' ');
-        return [command, args]
-    }
-
-    private runCommand(): string {
-        let [command, args] = this.splitCurrLine();
-
-        this.addEntry();
-
-        if (command == 'clear') {
-            this.term.clear();
-            return '';
-        } else if (command == '!!') {
-            this.entries[this.entriesPointer-1] = this.entries[this.entriesPointer-2];
-            console.log(this.entries, this.entriesPointer);
-            command = this.entries[this.entriesPointer-1];
-        }
-
-        if (commands.hasOwnProperty(command)) {
-            return commands[command].run(args);
-        }
-
-        // Error
-        return `${U.error} ${U.command(command)} is not available. Run ${U.command('help')} for all available commands`;
-    }
-
     writePrompt(): void {
-        if (this.curr_line !== '') {
-            this.term.write(this.runCommand());
-        }
         this.nl();
         this.term.write(this.user + '@' + this.machine + ' ' + this.separator + ' ');
         this.horizArrows = '';
