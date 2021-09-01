@@ -29,7 +29,7 @@ export class TerminalController {
         this.setUser(localStorage.getItem('username'));
         this.setMachine('myPortfolio');
         this.setSeparator('>');
-        this.setWelcome('Welcome to my portfolio!');
+        this.setWelcome('Welcome to my terminal portfolio!\n\n\rThe idea of using a custom terminal in a webpage originated when planning for a project that turned out to be too ambitious for a couple of summer months, that is mostly spent enjoying sea and nature activities;\n\n\rUnnecessary to point out, this also revealed to be more laborious than antecipated;\n\rWhen searching and trying a few libraries of already-implemented JS terminals, each one of them had some limitation, being the lack of custom styles, not dealing with keypresses the way it was intended or not dealing with keypresses at all;\n\n\rFinally, the library xterm.js was the one that seemed the least compromised, with a simple style, the possibility of coloring letter and also used in other platforms, like VSCode;\n\rLater this decision was a little questioned because sometimes it was hard to implement some intended features, as this works as similar to a real terminal as I could tell;\n\n\rIn the end, the result is satisfiable, with some future improvements planned;');
 
         this.term.open(document.getElementById('terminal')!);
         fit.fit();
