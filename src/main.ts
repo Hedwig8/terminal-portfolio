@@ -7,5 +7,5 @@ let mobileAndTabletCheck: () => boolean = function() {
     return check;
 };
 
-if (mobileAndTabletCheck()) alert('mobile');
+if (mobileAndTabletCheck()) document.getElementById('mobile').className = '';
 else new TerminalController();

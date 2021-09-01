@@ -11,6 +11,19 @@ body {
   width: 100vw;
 }
 
+.hidden {
+  display: none;
+}
+
+#mobile {
+  font-family: monospace;
+  color: white;
+  height: 40vh;
+  margin: 10vh auto;
+  text-align: center;
+  width: 70vw;
+}
+
 #terminal {
   height: 99vh;
   margin: 0;
