@@ -5,5 +5,5 @@ module.exports = {
             ]
         }
     },
-    base: '/terminal-interface-portfolio/'
+    base: '/terminal-portfolio/'
 }
